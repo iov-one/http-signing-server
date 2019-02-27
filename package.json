@@ -12,7 +12,17 @@
     "build": "rm -rf build && tsc",
     "test": "mocha \"./build/**/*.spec.js\""
   },
+  "dependencies": {
+    "@iov/bns": "^0.12.2",
+    "@iov/core": "^0.12.2",
+    "@iov/jsonrpc": "^0.11.0",
+    "@iov/keycontrol": "^0.12.2",
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1"
+  },
   "devDependencies": {
+    "@types/koa": "^2.0.48",
+    "@types/koa-bodyparser": "^4.2.2",
     "chai": "^4.2.0",
     "mocha": "^6.0.2",
     "prettier": "^1.16.4",

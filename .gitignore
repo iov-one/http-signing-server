@@ -1,0 +1,11 @@
+# Dependency directories
+node_modules/
+
+# OS-specific files
+.DS_Store
+
+# IDE-specific
+.vscode/
+
+# Working dirs
+build/

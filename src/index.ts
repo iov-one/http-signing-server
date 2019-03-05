@@ -1,8 +1,15 @@
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 
+import { PublicIdentity, UnsignedTransaction } from "@iov/bcp";
 import { bnsConnector } from "@iov/bns";
-import { JsonRpcSigningServer, MultiChainSigner, SigningServerCore } from "@iov/core";
+import {
+  GetIdentitiesAuthorization,
+  JsonRpcSigningServer,
+  MultiChainSigner,
+  SignAndPostAuthorization,
+  SigningServerCore,
+} from "@iov/core";
 import { EnglishMnemonic } from "@iov/crypto";
 import { Ed25519HdWallet, HdPaths, UserProfile } from "@iov/keycontrol";
 
@@ -28,13 +35,34 @@ async function main(): Promise<void> {
   await profile.createIdentity(wallet.id, bcpConnection.chainId(), HdPaths.iov(1));
   await profile.createIdentity(wallet.id, bcpConnection.chainId(), HdPaths.iov(2));
 
-  for (const identity of profile.getIdentities(wallet.id)) {
+  const allIdentities = profile.getIdentities(wallet.id);
+
+  for (const identity of allIdentities) {
     const address = await signer.identityToAddress(identity);
     const account = await signer.connection(identity.chainId).getAccount({ address: address });
     console.log(`${address}:`, account ? account.balance : "does not exist");
   }
 
-  const core = new SigningServerCore(profile, signer);
+  const getIdentitiesAuthorization: GetIdentitiesAuthorization = async (
+    reason: string,
+    matchingIdentities: ReadonlyArray<PublicIdentity>,
+  ): Promise<ReadonlyArray<PublicIdentity>> => {
+    console.log(reason);
+
+    return matchingIdentities;
+  };
+
+  const signAndPostAuthorization: SignAndPostAuthorization = async (
+    reason: string,
+    transaction: UnsignedTransaction,
+  ): Promise<boolean> => {
+    console.log(reason);
+    console.log(transaction);
+
+    return true;
+  };
+
+  const core = new SigningServerCore(profile, signer, getIdentitiesAuthorization, signAndPostAuthorization);
   const server = new JsonRpcSigningServer(core);
 
   const api = new Koa();

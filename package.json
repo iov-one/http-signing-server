@@ -13,10 +13,10 @@
     "test": "mocha \"./build/**/*.spec.js\""
   },
   "dependencies": {
-    "@iov/bns": "^0.12.2",
-    "@iov/core": "^0.12.2",
-    "@iov/jsonrpc": "^0.11.0",
-    "@iov/keycontrol": "^0.12.2",
+    "@iov/bns": "^0.13.0-alpha.0",
+    "@iov/core": "^0.13.0-alpha.0",
+    "@iov/jsonrpc": "^0.13.0-alpha.0",
+    "@iov/keycontrol": "^0.13.0-alpha.0",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1"
   },

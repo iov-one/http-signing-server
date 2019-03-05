@@ -17,10 +17,12 @@
     "@iov/core": "^0.13.0-alpha.0",
     "@iov/jsonrpc": "^0.13.0-alpha.0",
     "@iov/keycontrol": "^0.13.0-alpha.0",
+    "inquirer": "^6.2.2",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1"
   },
   "devDependencies": {
+    "@types/inquirer": "^0.0.44",
     "@types/koa": "^2.0.48",
     "@types/koa-bodyparser": "^4.2.2",
     "chai": "^4.2.0",

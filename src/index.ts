@@ -1,7 +1,8 @@
+import inquirer = require("inquirer");
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 
-import { PublicIdentity, UnsignedTransaction } from "@iov/bcp";
+import { Address, PublicIdentity, UnsignedTransaction } from "@iov/bcp";
 import { bnsConnector } from "@iov/bns";
 import {
   GetIdentitiesAuthorization,
@@ -47,19 +48,43 @@ async function main(): Promise<void> {
     reason: string,
     matchingIdentities: ReadonlyArray<PublicIdentity>,
   ): Promise<ReadonlyArray<PublicIdentity>> => {
-    console.log(reason);
+    const addresses = matchingIdentities.map(identity => signer.identityToAddress(identity));
 
-    return matchingIdentities;
+    const answers: any = await inquirer.prompt([
+      {
+        name: "selectedIdentities",
+        type: "checkbox",
+        choices: addresses,
+        default: addresses,
+        message: `Select identities you want to reveal for '${reason}':`,
+      },
+    ]);
+    const selectedAddresses: ReadonlyArray<Address> = answers.selectedIdentities;
+
+    console.log("Thanks, your choice will be processed.");
+
+    const selectedIdentities = matchingIdentities.filter(identity =>
+      selectedAddresses.includes(signer.identityToAddress(identity)),
+    );
+    return selectedIdentities;
   };
 
   const signAndPostAuthorization: SignAndPostAuthorization = async (
     reason: string,
     transaction: UnsignedTransaction,
   ): Promise<boolean> => {
-    console.log(reason);
-    console.log(transaction);
+    console.log("Transaction to be signed:", transaction);
 
-    return true;
+    const answers: any = await inquirer.prompt([
+      {
+        name: "signAndPostAuthorization",
+        type: "confirm",
+        message: `Do you want to sign and submit the above transaction because of '${reason}':`,
+      },
+    ]);
+
+    const authorized: boolean = answers.signAndPostAuthorization;
+    return authorized;
   };
 
   const core = new SigningServerCore(profile, signer, getIdentitiesAuthorization, signAndPostAuthorization);
